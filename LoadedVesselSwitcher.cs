@@ -124,7 +124,7 @@ namespace BDALoadedVesselSwitcher
 
 				foreach(var wm in v.FindPartModulesImplementing<MissileFire>())
 				{
-					if(wm.team)
+					if(!wm.team)
 					{
 						wmgrsA.Add(wm);
 					}
