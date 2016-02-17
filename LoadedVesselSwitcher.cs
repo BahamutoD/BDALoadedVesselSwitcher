@@ -24,6 +24,7 @@ namespace BDALoadedVesselSwitcher
 		Rect windowRect;
 
 		bool ready = false;
+		bool showGUI = false;
 
 		void Awake()
 		{
@@ -49,6 +50,18 @@ namespace BDALoadedVesselSwitcher
 			//showGui = true;
 
 			windowRect = new Rect(10, Screen.height / 6f, windowWidth, 10);
+
+			ready = false;
+			StartCoroutine(WaitForBDASettings());
+		}
+
+		IEnumerator WaitForBDASettings()
+		{
+			while(BDArmorySettings.Instance == null)
+			{
+				yield return null;
+			}
+
 			ready = true;
 			BDArmorySettings.Instance.hasVS = true;
 		}
@@ -56,14 +69,34 @@ namespace BDALoadedVesselSwitcher
 
 		void MissileFireOnToggleTeam (MissileFire wm, BDArmorySettings.BDATeams team)
 		{
-			UpdateList();
+			if(showGUI)
+			{
+				UpdateList();
+			}
 		}
 
 		void VesselEventUpdate(Vessel v)
 		{
-			UpdateList();
+			if(showGUI)
+			{
+				UpdateList();
+			}
 		}
 
+		void Update()
+		{
+			if(ready)
+			{
+				if(BDArmorySettings.Instance.showVSGUI != showGUI)
+				{
+					showGUI = BDArmorySettings.Instance.showVSGUI;
+					if(showGUI)
+					{
+						UpdateList();
+					}
+				}
+			}
+		}
 
 
 		void UpdateList()
@@ -108,7 +141,7 @@ namespace BDALoadedVesselSwitcher
 		{
 			if(ready)
 			{
-				if(BDArmorySettings.Instance.showVSGUI)
+				if(showGUI && BDArmorySettings.GAME_UI_ENABLED)
 				{
 					windowRect.height = windowHeight;
 					windowRect = GUI.Window(10293444, windowRect, ListWindow, "BDA Vessel Switcher", HighLogic.Skin.window);
@@ -131,8 +164,8 @@ namespace BDALoadedVesselSwitcher
 
 		void ListWindow(int id)
 		{
-			GUI.DragWindow(new Rect(0,0,windowWidth-30, titleHeight));
-			if(GUI.Button(new Rect(windowWidth - 30, 4, 26, 26), "X", HighLogic.Skin.button))
+			GUI.DragWindow(new Rect(0,0,windowWidth-buttonHeight-4, titleHeight));
+			if(GUI.Button(new Rect(windowWidth - buttonHeight-4, 4, buttonHeight, buttonHeight), "X", HighLogic.Skin.button))
 			{
 				BDArmorySettings.Instance.showVSGUI = false;
 				return;
