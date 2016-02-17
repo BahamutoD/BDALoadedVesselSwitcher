@@ -26,6 +26,8 @@ namespace BDALoadedVesselSwitcher
 		bool ready = false;
 		bool showGUI = false;
 
+		int guiCheckIndex = 0;
+
 		void Awake()
 		{
 			if(Instance)
@@ -64,6 +66,7 @@ namespace BDALoadedVesselSwitcher
 
 			ready = true;
 			BDArmorySettings.Instance.hasVS = true;
+			guiCheckIndex = Misc.RegisterGUIRect(new Rect());
 		}
 
 
@@ -95,6 +98,23 @@ namespace BDALoadedVesselSwitcher
 						UpdateList();
 					}
 				}
+
+				if(showGUI)
+				{
+					Hotkeys();
+				}
+			}
+		}
+
+		void Hotkeys()
+		{
+			if(Input.GetKeyDown(KeyCode.PageUp))
+			{
+				SwitchToNextVessel();
+			}
+			if(Input.GetKeyDown(KeyCode.PageDown))
+			{
+				SwitchToPreviousVessel();
 			}
 		}
 
@@ -145,6 +165,11 @@ namespace BDALoadedVesselSwitcher
 				{
 					windowRect.height = windowHeight;
 					windowRect = GUI.Window(10293444, windowRect, ListWindow, "BDA Vessel Switcher", HighLogic.Skin.window);
+					Misc.UpdateGUIRect(windowRect, guiCheckIndex);
+				}
+				else
+				{
+					Misc.UpdateGUIRect(new Rect(), guiCheckIndex);
 				}
 
 				if(teamSwitchDirty)
@@ -264,6 +289,99 @@ namespace BDALoadedVesselSwitcher
 			height += margin;
 
 			windowHeight = height;
+		}
+
+		void SwitchToNextVessel()
+		{
+			bool switchNext = false;
+			foreach(var wm in wmgrsA)
+			{
+				if(switchNext)
+				{
+					FlightGlobals.ForceSetActiveVessel(wm.vessel);
+					return;
+				}
+				else if(wm.vessel.isActiveVessel)
+				{
+					switchNext = true;
+				}
+			}
+
+			foreach(var wm in wmgrsB)
+			{
+				if(switchNext)
+				{
+					FlightGlobals.ForceSetActiveVessel(wm.vessel);
+					return;
+				}
+				else if(wm.vessel.isActiveVessel)
+				{
+					switchNext = true;
+				}
+			}
+
+
+			if(wmgrsA.Count > 0 && wmgrsA[0] && !wmgrsA[0].vessel.isActiveVessel)
+			{
+				FlightGlobals.ForceSetActiveVessel(wmgrsA[0].vessel);
+			}
+			else if(wmgrsB.Count > 0 && wmgrsB[0] && !wmgrsB[0].vessel.isActiveVessel)
+			{
+				FlightGlobals.ForceSetActiveVessel(wmgrsB[0].vessel);
+			}
+		}
+
+		void SwitchToPreviousVessel()
+		{
+			if(wmgrsB.Count > 0)
+			{
+				for(int i = wmgrsB.Count - 1; i >= 0; i--)
+				{
+					if(wmgrsB[i].vessel.isActiveVessel)
+					{
+						if(i > 0)
+						{
+							FlightGlobals.ForceSetActiveVessel(wmgrsB[i - 1].vessel);
+							return;
+						}
+						else if(wmgrsA.Count > 0)
+						{
+							FlightGlobals.ForceSetActiveVessel(wmgrsA[wmgrsA.Count-1].vessel);
+							return;
+						}
+						else if(wmgrsB.Count > 0)
+						{
+							FlightGlobals.ForceSetActiveVessel(wmgrsB[wmgrsB.Count-1].vessel);
+							return;
+						}
+					}
+				}
+			}
+
+			if(wmgrsA.Count > 0)
+			{
+				for(int i = wmgrsA.Count - 1; i >= 0; i--)
+				{
+					if(wmgrsA[i].vessel.isActiveVessel)
+					{
+						if(i > 0)
+						{
+							FlightGlobals.ForceSetActiveVessel(wmgrsA[i - 1].vessel);
+							return;
+						}
+						else if(wmgrsB.Count > 0)
+						{
+							FlightGlobals.ForceSetActiveVessel(wmgrsB[wmgrsB.Count-1].vessel);
+							return;
+						}
+						else if(wmgrsA.Count > 0)
+						{
+							FlightGlobals.ForceSetActiveVessel(wmgrsA[wmgrsA.Count-1].vessel);
+							return;
+						}
+					}
+				}
+			}
 		}
 	}
 }
