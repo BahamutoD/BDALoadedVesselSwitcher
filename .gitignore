@@ -47,3 +47,10 @@ BahaTurret.dll
 
 
 obj/
+/.vs/BDALoadedVesselSwitcher/v14
+/bin/Release/KSPAssets.dll
+/bin/Release/KSPUtil.dll
+/bin/Release/SaveUpgradePipeline.Core.dll
+/bin/Release/UnityEngine.UI.dll
+/bin/Release/UnityEngine.xml
+/bin/Release/Vectrosity.dll
