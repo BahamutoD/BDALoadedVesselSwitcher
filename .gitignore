@@ -2,6 +2,10 @@
 Thumbs.db
 ehthumbs.db
 
+obj/
+BahaTurret.dll
+bin/Debug/
+
 # Folder config file
 Desktop.ini
 
@@ -41,9 +45,16 @@ mscorlib.dll
 System*
 TDx*
 UnityEngine.dll
-BahaTurret.dll
 *.pdb
 *.jar
+*.bat
 
-
-obj/
+BahaTurret/BahaTurret.userprefs
+*.zip
+KSPAssets.dll
+KSPCore.dll
+KSPUtil.dll
+SaveUpgradePipeline.Core.dll
+UnityEngine.UI.dll
+UnityEngine.xml
+Vectrosity.dll

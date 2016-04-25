@@ -108,11 +108,11 @@ namespace BDALoadedVesselSwitcher
 
 		void Hotkeys()
 		{
-			if(Input.GetKeyDown(KeyCode.PageUp))
+			if(Input.GetKeyDown(KeyCode.PageDown))
 			{
 				SwitchToNextVessel();
 			}
-			if(Input.GetKeyDown(KeyCode.PageDown))
+			if(Input.GetKeyDown(KeyCode.PageUp))
 			{
 				SwitchToPreviousVessel();
 			}
